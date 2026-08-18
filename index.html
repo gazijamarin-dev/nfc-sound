@@ -9,25 +9,51 @@
       margin: 0;
       height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       background-color: #111;
       color: white;
       font-family: sans-serif;
       user-select: none;
+      text-align: center;
+      padding: 20px;
+    }
+    #status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #888;
     }
   </style>
 </head>
 <body>
   <h2>Dodirni bilo gdje na ekranu</h2>
+  <div id="status">Učitavanje zvuka...</div>
 
   <audio id="mojZvuk" src="german-music-ultra.mp3" preload="auto"></audio>
 
   <script>
+    const audio = document.getElementById('mojZvuk');
+    const status = document.getElementById('status');
+
+    audio.addEventListener('canplaythrough', () => {
+      status.innerText = "Zvuk spreman! Dodirni ekran.";
+    });
+
+    audio.addEventListener('error', () => {
+      status.innerText = "Greška: Datoteka 'german-music-ultra.mp3' nije pronađena na GitHubu.";
+      status.style.color = "#ff5555";
+    });
+
     function pokreniZvuk() {
-      const audio = document.getElementById('mojZvuk');
       audio.volume = 1.0;
-      audio.play().catch(err => console.log(err));
+      audio.play().then(() => {
+        status.innerText = "Svira!";
+        status.style.color = "#55ff55";
+      }).catch(err => {
+        status.innerText = "Greška: " + err.message;
+        status.style.color = "#ff5555";
+      });
     }
 
     document.addEventListener('pointerdown', pokreniZvuk, { once: true });
