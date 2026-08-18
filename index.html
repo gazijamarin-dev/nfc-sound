@@ -21,40 +21,15 @@
 <body>
   <h2>Dodirni bilo gdje na ekranu</h2>
 
+  <audio id="mojZvuk" src="german-music-ultra.mp3" preload="auto"></audio>
+
   <script>
-    let audioCtx;
-
     function pokreniZvuk() {
-      // Inicijalizacija AudioContexta nakon dodira
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
-      // Izvor zvuka (sintetizator) i pojačalo
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      // 'square' val stvara agresivan, vrlo glasan i oštar ton
-      osc.type = 'square'; 
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime); // 880 Hz (visoki ton)
-
-      // Postavljanje jacine zvuka na maksimalnu dopuštenu razinu
-      gain.gain.setValueAtTime(1.0, audioCtx.currentTime);
-
-      // Povezivanje komponente na zvučnike
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      // Pokretanje tona i gašenje nakon 0.6 sekundi
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.6);
+      const audio = document.getElementById('mojZvuk');
+      audio.volume = 1.0;
+      audio.play().catch(err => console.log(err));
     }
 
-    // Okidač na prvi dodir ekrana
     document.addEventListener('pointerdown', pokreniZvuk, { once: true });
   </script>
 </body>
